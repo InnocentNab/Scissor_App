@@ -1,14 +1,11 @@
-// import express from "express"
 import { Router } from "express"
+import { register, login } from "../controller/userController.ts"
+import { Validation } from "../validation/validation.ts"
 const userRouter = Router()
-userRouter.get('/',(req,res)=>{
+userRouter.get('/', (req, res) => {
     res.send("Get All")
 })
-userRouter.post('/register',(req,res)=>{
-    res.send("Registered")
-})
-userRouter.post('/login',(req,res)=>{
-    res.send("Logged in")
-})
+userRouter.post('/register', Validation, register)
+userRouter.post('/login', Validation, login)
 
 export default userRouter
