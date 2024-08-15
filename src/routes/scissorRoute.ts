@@ -1,12 +1,12 @@
 import { Router } from "express"
 import authMiddleware from "../authentication/auth.ts"
-import { Validation } from "../validation/validation.ts"
-import { shortUrl } from "../controller/urlController.ts"
-const ScissorRouter = Router()
+import { registerValidation, ValidateUrl } from "../validation/validation.ts"
+import { shortenUrl, getAllUrl } from "../controller/urlController.ts"
+const urlShortening = Router()
 
-ScissorRouter.get('/', (req, res) => {
-    res.send("Get All links")
-})
-ScissorRouter.post('/shortLink', authMiddleware, Validation, shortUrl)
 
-export default ScissorRouter
+urlShortening.get('/getAllUrl', getAllUrl)
+urlShortening.post('/shortLink', ValidateUrl, shortenUrl)
+// urlShortening.post('/shortLink', ValidateUrl, authMiddleware, shortenUrl)
+
+export default urlShortening

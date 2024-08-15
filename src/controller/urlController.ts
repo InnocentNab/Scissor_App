@@ -1,20 +1,60 @@
-import { nanoid } from "nanoid";
 import Url from "../database/model/urlModelMong.ts"
-export const shortUrl = async (req: any, res: any) => {
-    const { originalUrl } = req.body;
+import client from "../integration/redis.ts"
+export const shortenUrl = async (req: any, res: any) => {
 
-    // if (!originalUrl) {
-    //     return res.status(400).json({ message: 'Original URL is required' });
-    // }
+    const { originalUrl, shortUrl } = (req.body)
+    if (!originalUrl) {
+        throw new Error("Url must be provided")
+    }
+    try {
+        let verified_alias: string = "";
+        if (shortUrl) {
+            const existingUrl = await Url.findOne({ shortUrl })
+            if (existingUrl) {
+                throw new Error("Alias already exists");
+            }
+            verified_alias = shortUrl
+        } else {
+            const getCustomUrl = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'z', 'y', 'x', 'w', 's', 'r', 'q', 'p', 'o', 'n', 'm']
+            let custom_url = ''
+            for (let i = 0; i < 5; i++) {
+                custom_url += getCustomUrl[Math.floor(Math.random() * getCustomUrl.length)];
+            }
+            verified_alias = custom_url
+            console.log(verified_alias, originalUrl);
+        }
+        if (!verified_alias) {
+            throw new Error("Failed to generate a valid short URL alias");
+        }
 
-    // const shortId = nanoid(8);
-    // console.log(shortId)
-    // const newUrl = new URL({ originalUrl, shortId });
+        const newUrl = new Url({ shortUrl: verified_alias, originalUrl });
+        await newUrl.save()
+        res.status(200).send(newUrl)
 
-    // try {
-    //     await newUrl.save();
-    //     res.status(201).json({ shortId });
-    // } catch (error) {
-    //     res.status(500).json({ message: 'Error creating shortened URL', error });
-    // }
+
+    } catch (error: any) {
+        res.status(500).send(error.message)
+    }
+}
+
+
+
+
+export const getAllUrl = async (req: any, res: any) => {
+    const cachekey = "/URL";
+    const data = await client.get(cachekey);
+    if (data) {
+        console.log("returning links from cache");
+        return res.status(200).send({
+            data: JSON.parse(data),
+            error: false,
+        });
+    }
+    console.log("returning data from database");
+    const links = await Url.find({});
+    // set cache
+    await client.setEx(cachekey, 10 * 60, JSON.stringify(links));
+    res.status(200).send({
+        AllPost: links,
+    });
 }

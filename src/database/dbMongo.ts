@@ -1,6 +1,8 @@
 import mongoose from "mongoose";
-const uri = 'mongodb://localhost:27017/Scissor_App'
-// const uri = process.env.MongoDB_URI;
+// const uri = 'mongodb://localhost:27017/Scissor_App'
+import dotenv from "dotenv"
+dotenv.config()
+const uri: any = process.env.MongoDB_URI;
 
 export const connectDB = async (): Promise<typeof mongoose> => {
     try {

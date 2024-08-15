@@ -2,11 +2,12 @@ import mongoose from "mongoose";
 interface IUrl {
   originalUrl: string;
   shortUrl: string;
+  alias: string;
   createdAt?: Date;
   updatedAt?: Date;
 }
 
-const urlSchema = new mongoose.Schema<IUrl>({
+const shortUrlSchema = new mongoose.Schema<IUrl>({
   originalUrl: {
     type: String,
     required: true,
@@ -17,6 +18,7 @@ const urlSchema = new mongoose.Schema<IUrl>({
     required: true,
     unique: true,
     trim: true,
+    sparse: true
   },
   createdAt: {
     type: Date,
@@ -29,5 +31,5 @@ const urlSchema = new mongoose.Schema<IUrl>({
 })
 
 
-const Url = mongoose.model('Url', urlSchema);
+const Url = mongoose.model<IUrl>('Url', shortUrlSchema);
 export default Url

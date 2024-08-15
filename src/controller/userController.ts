@@ -6,6 +6,8 @@ import User from "../database/model/userModelMongo.ts"
 
 export const register = async (req: any, res: any) => {
     const { email, password } = req.body
+    // console.log(email);
+
     const saltRounds = 10
     const user = await User.findOne({ email });
     // check if email exists
@@ -28,7 +30,6 @@ export const register = async (req: any, res: any) => {
         res.status(400).send("Error Creating User, Please Try Again");
     }
 }
-
 export const login = async (req: any, res: any) => {
     const { email, password } = req.body
     const user = await User.findOne({ email });
