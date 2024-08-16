@@ -17,8 +17,8 @@ const shortUrlSchema = new mongoose.Schema<IUrl>({
     type: String,
     required: true,
     unique: true,
-    trim: true,
-    sparse: true
+    // trim: true,
+    // sparse: true
   },
   createdAt: {
     type: Date,

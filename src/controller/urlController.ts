@@ -37,9 +37,6 @@ export const shortenUrl = async (req: any, res: any) => {
     }
 }
 
-
-
-
 export const getAllUrl = async (req: any, res: any) => {
     const cachekey = "/URL";
     const data = await client.get(cachekey);
@@ -57,4 +54,21 @@ export const getAllUrl = async (req: any, res: any) => {
     res.status(200).send({
         AllPost: links,
     });
+}
+
+export const redirectUrl = async (req: any, res: any) => {
+    const { shortUrl } = req.body
+    // const { shortUrl } = req.params
+    try {
+        const urlRecord = await Url.findOne({ shortUrl });
+        console.log(urlRecord?.shortUrl);
+
+        if (urlRecord) {
+            return res.redirect(urlRecord.originalUrl);
+        } else {
+            return res.status(404).send('Short URL not found');
+        }
+    } catch (error: any) {
+        return res.status(500).send(error.message);
+    }
 }
