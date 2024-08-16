@@ -1,7 +1,7 @@
 import { Router } from "express"
-import authMiddleware from "../authentication/auth.ts"
-import { registerValidation, ValidateUrl } from "../validation/validation.ts"
-import { shortenUrl, getAllUrl, redirectUrl } from "../controller/urlController.ts"
+import authMiddleware from "../authentication/auth"
+import { registerValidation, ValidateUrl } from "../validation/validation"
+import { shortenUrl, getAllUrl, redirectUrl } from "../controller/urlController"
 const urlShortening = Router()
 
 

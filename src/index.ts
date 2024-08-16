@@ -1,10 +1,10 @@
 import express from "express";
 import dotenv from "dotenv"
-import client from "./integration/redis.ts"
-import { connectDB } from "./database/dbMongo.ts";
-import userRouter from "./routes/userRoute.ts"
-import urlShortening from "./routes/scissorRoute.ts";
-import { limiter } from "./rate-limiting/rate-limit.ts";
+import client from "./integration/redis"
+import { connectDB } from "./database/dbMongo";
+import userRouter from "./routes/userRoute"
+import urlShortening from "./routes/scissorRoute";
+import { limiter } from "./rate-limiting/rate-limit";
 
 const app = express()
 dotenv.config()

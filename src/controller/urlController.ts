@@ -1,5 +1,5 @@
-import Url from "../database/model/urlModelMong.ts"
-import client from "../integration/redis.ts"
+import Url from "../database/model/urlModelMong"
+import client from "../integration/redis"
 export const shortenUrl = async (req: any, res: any) => {
 
     const { originalUrl, shortUrl } = (req.body)
