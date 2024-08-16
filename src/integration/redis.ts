@@ -1,6 +1,8 @@
 import { createClient } from "redis";
+import dotenv from "dotenv"
+dotenv.config()
 const client = createClient({
-  url: 'redis://127.0.0.1:6379',
+  url: process.env.redisUri
 });
 
 client.on("connect", () => {

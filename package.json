@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "rimraf /build && tsc",
+    "build": "rimraf ./build && tsc -b",
     "start": "node ./build/index.js",
     "dev": "nodemon ./build/index.js"
   },
