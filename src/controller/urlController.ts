@@ -1,7 +1,8 @@
 import Url from "../database/model/urlModelMong"
 import client from "../integration/redis"
-export const shortenUrl = async (req: any, res: any) => {
+import qrcode from "qrcode"
 
+export const shortenUrl = async (req: any, res: any) => {
     const { originalUrl, shortUrl } = (req.body)
     if (!originalUrl) {
         throw new Error("Url must be provided")
@@ -26,12 +27,9 @@ export const shortenUrl = async (req: any, res: any) => {
         if (!verified_alias) {
             throw new Error("Failed to generate a valid short URL alias");
         }
-
         const newUrl = new Url({ shortUrl: verified_alias, originalUrl });
         await newUrl.save()
         res.status(200).send(newUrl)
-
-
     } catch (error: any) {
         res.status(500).send(error.message)
     }
@@ -70,5 +68,25 @@ export const redirectUrl = async (req: any, res: any) => {
         }
     } catch (error: any) {
         return res.status(500).send(error.message);
+    }
+}
+
+export const getQrcode = async (req: any, res: any) => {
+    const { shortUrl } = req.body
+    const urlRecord = await Url.findOne({ shortUrl });
+    console.log(urlRecord?.shortUrl);
+    if (!urlRecord) {
+        res.status(404).send({ error: "URL not found" })
+        return;
+    }
+    try {
+        const qrCodeData = await qrcode.toDataURL(shortUrl);
+        console.log('QR code generated successfully');
+        console.log(qrCodeData);
+        return qrCodeData;
+
+    } catch (error) {
+        console.error('Error generating QR code', error);
+        throw new Error('Error generating QR code');
     }
 }
